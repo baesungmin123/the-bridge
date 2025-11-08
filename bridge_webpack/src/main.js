@@ -370,4 +370,24 @@ canvas.addEventListener('click', e => {
 	checkIntersects();
 });
 
+// 버튼
+const btnWrapper = document.createElement('div');
+
+const ilbuniBtn = document.createElement('button');
+ilbuniBtn.dataset.type = 'ilbuni';
+ilbuniBtn.style.cssText = 'position: absolute; left: 20px; top: 20px';
+ilbuniBtn.innerHTML = 'Ilbuni';
+btnWrapper.append(ilbuniBtn);
+
+const robotBtn = document.createElement('button');
+robotBtn.dataset.type = 'robot';
+robotBtn.style.cssText = 'position: absolute; left: 20px; top: 50px';
+robotBtn.innerHTML = 'Robot';
+btnWrapper.append(robotBtn);
+
+document.body.append(btnWrapper);
+
+ilbuniBtn.addEventListener('click', () => player.changeModel('ilbuni'));
+robotBtn.addEventListener('click', () => player.changeModel('robot26'));
+
 draw();

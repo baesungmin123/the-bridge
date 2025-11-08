@@ -15,14 +15,18 @@ export class Player extends Stuff {
 		this.height = 0.5;
 		this.depth = 0.5;
 
+		this.modelName = info.modelName || 'ilbuni';
+
+		this.loadModel(this.modelName);
+	}
+	loadModel(name) {
 		cm1.gltfLoader.load(
-			'/models/ilbuni.glb',
+			`/models/${name}.glb`,
 			glb => {
-				// shadow
+				if (this.modelMesh) cm1.scene.remove(this.modelMesh);
+
 				glb.scene.traverse(child => {
-					if (child.isMesh) {
-						child.castShadow = true;
-					}
+					if (child.isMesh) child.castShadow = true;
 				});
 
 				this.modelMesh = glb.scene.children[0];
@@ -32,27 +36,23 @@ export class Player extends Stuff {
 					this.rotationY,
 					this.rotationZ
 				);
-				this.modelMesh.castShadow = true;
 				cm1.scene.add(this.modelMesh);
 
 				this.modelMesh.animations = glb.animations;
 				cm1.mixer = new AnimationMixer(this.modelMesh);
 				this.actions = [];
-				this.actions[0] = cm1.mixer.clipAction(this.modelMesh.animations[0]); // default
-				this.actions[1] = cm1.mixer.clipAction(this.modelMesh.animations[1]); // fall
-				this.actions[2] = cm1.mixer.clipAction(this.modelMesh.animations[2]); // jump
+				this.actions[0] = cm1.mixer.clipAction(this.modelMesh.animations[0]);
+				this.actions[1] = cm1.mixer.clipAction(this.modelMesh.animations[1]);
+				this.actions[2] = cm1.mixer.clipAction(this.modelMesh.animations[2]);
 				this.actions[2].repetitions = 1;
-				
 				this.actions[0].play();
 
 				this.setCannonBody();
 			}
 		);
-
-		// this.mesh = new Mesh(this.geometry, this.material);
-		// this.mesh.position.set(this.x, this.y, this.z);
-		// this.mesh.castShadow = true;
-		// this.mesh.receiveShadow = true;
-		// cm1.scene.add(this.mesh);
+	}
+	changeModel(type) {
+		this.modelName = type;
+		this.loadModel(type);
 	}
 }
